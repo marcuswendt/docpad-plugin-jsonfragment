@@ -1,0 +1,25 @@
+{
+  "name": "docpad-plugin-jsonfragment",
+  "version": "2.0.0",
+  "description": "Output a page's meta + rendered data as JSON file.",
+  "homepage": "https://github.com/field/docpad-plugin-jsonfragment",
+  "keywords": [
+    "docpad",
+    "docpad-plugin",
+    "content",
+    "JSON"
+  ],
+  "author": "Marcus Wendt <marcus@field.io> (http://www.field.io)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/field/docpad-plugin-jsonfragment.git"
+  },
+  "engines": {
+    "node": ">=0.8.0",
+    "docpad": ">=6.0"
+  },
+  "dependencies": {
+    "async": "~0.2.9"
+  },
+  "main": "./jsonfragment.plugin.coffee"
+}
