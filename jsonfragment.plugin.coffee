@@ -1,5 +1,8 @@
 fs = require 'fs'
 async = require 'async'
+jquery = require 'jquery'
+jsdom = require "jsdom"
+
 
 module.exports = (BasePlugin) ->
     
@@ -7,17 +10,20 @@ module.exports = (BasePlugin) ->
 
         name: 'jsonfragment'
 
+        config: 
+            # wether to use Docpads contentRenderedWithoutLayouts or the contents of a user-specified HTML element
+            contentFromDOMQuery: null
+
         writeAfter: (opts, next) ->
             {collection, templateData} = opts
 
-            async.each collection.models, (model, cbEach) ->
+            async.each collection.models, (model, cbEach) =>
                 attributes = model.attributes
-                essentialContent = attributes.contentRenderedWithoutLayouts
 
-                if attributes.isDocument and essentialContent? and attributes.outExtension == 'html'
+                outputJSON = (content) ->
                     data = 
                         meta: model.meta.attributes
-                        content: essentialContent
+                        content: content
 
                     outputFile = attributes.outPath.replace '.html', '.json'
 
@@ -25,9 +31,25 @@ module.exports = (BasePlugin) ->
                         console.log err if(err)
                         cbEach()
 
-                # continue for all non-html files
+
+                # only parse HTML documents
+                return cbEach() unless attributes.isDocument and attributes.outExtension == 'html'
+
+                # get content either from DOM or via Docpad template
+                if @config.contentFromDOMQuery?
+                    html = attributes.contentRendered
+                    return cbEach() unless html?
+
+                    jsdom.env html, (err, window) =>
+                        $ = jquery.create(window)
+                        outputJSON $(@config.contentFromDOMQuery).html()
+                        
                 else
-                    cbEach()
+                    html = attributes.contentRenderedWithoutLayouts
+                    return cbEach() unless html?
+                    outputJSON html
+
+                
 
             , (err) ->
                 console.log "finished writing .json fragments"
