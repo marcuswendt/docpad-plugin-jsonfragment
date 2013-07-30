@@ -1,6 +1,6 @@
 {
   "name": "docpad-plugin-jsonfragment",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Output a page's meta + rendered data as JSON file.",
   "homepage": "https://github.com/field/docpad-plugin-jsonfragment",
   "keywords": [

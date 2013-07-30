@@ -33,7 +33,7 @@ module.exports = (BasePlugin) ->
 
 
                 # only parse HTML documents
-                return cbEach() unless attributes.isDocument and attributes.outExtension == 'html'
+                return cbEach() unless attributes.outExtension == 'html'
 
                 # get content either from DOM or via Docpad template
                 if @config.contentFromDOMQuery?
@@ -41,6 +41,7 @@ module.exports = (BasePlugin) ->
                     return cbEach() unless html?
 
                     jsdom.env html, (err, window) =>
+                        console.log err if err?
                         $ = jquery.create(window)
                         outputJSON $(@config.contentFromDOMQuery).html()
                         
@@ -52,5 +53,5 @@ module.exports = (BasePlugin) ->
                 
 
             , (err) ->
-                console.log "finished writing .json fragments"
+                console.log "Wrote all JSON fragments."
                 next()
